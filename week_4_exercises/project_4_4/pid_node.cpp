@@ -13,9 +13,9 @@ ros::Time last_msg_time_;              // Last time callback was called (to calc
 double integral_, pre_error_;
 
 // PID Global Variables
-double Kp_ = 6;
-double Ki_ = 0.3;
-double Kd_ = 0.2;
+double kp_;
+double ki_;
+double kd_;
 
 /**
  * Callback for Kyle (top turtle). Saves the position of the top turtle into the global
@@ -35,12 +35,12 @@ void kylePoseCallback(geometry_msgs::PoseStamped msg)
  */
 double pid(double error, double dt) {
 
-    double p = Kp_ * error;
+    double p = kp_ * error;
 
     integral_ += error * dt;
-    double i = Ki_ * integral_;
+    double i = ki_ * integral_;
     
-    double d = Kd_ * (error - pre_error_) / dt;
+    double d = kd_ * (error - pre_error_) / dt;
     pre_error_ = error;
 
     return p + i + d;
@@ -85,6 +85,11 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "pid_node");
 
     ros::NodeHandle nh;
+    ros::NodeHandle pnh("~");
+
+    kp_ = pnh.param<double>("kp", 2);
+    ki_ = pnh.param<double>("ki", 0);
+    kd_ = pnh.param<double>("kd", 0.5);
 
     // Advertise "/oswin/velocity" to control the bottom turtle and "/error" for visualization
     velocity_pub_ = nh.advertise<geometry_msgs::Twist>("oswin/velocity", 1);
