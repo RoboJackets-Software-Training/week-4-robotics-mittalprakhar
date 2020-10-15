@@ -132,7 +132,4 @@ include_directories(${CATKIN_DEVEL_PREFIX}/include)
 
 
 add_subdirectory(testing)
-add_subdirectory(exercise_4_1)
-add_subdirectory(exercise_4_2)
-add_subdirectory(exercise_4_3)
 add_subdirectory(project_4_4)
